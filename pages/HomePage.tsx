@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
-import { LayoutTemplateIcon, ImagePlusIcon, Wand2Icon } from '../components/icons/LucideIcons';
+import { LayoutTemplateIcon, ImagePlusIcon, Wand2Icon, BananaIcon } from '../components/icons/LucideIcons';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string; to: string; }> = ({ icon, title, description, to }) => (
     <motion.div whileHover={{ y: -5 }} className="w-full">
@@ -25,49 +25,46 @@ const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description:
 );
 
 const HomePage: React.FC = () => {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-center mb-16"
-      >
-        <h1 className="text-5xl md:text-6xl font-extrabold font-serif mb-4 text-primary">
-          Super Banana
-        </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
-          Your AI-powered toolkit for creating stunning thumbnails and professional product photos in seconds.
-        </p>
-        <div className="mt-8 flex justify-center gap-4">
-          <Link to="/editor">
-            <Button size="lg" variant="primary">Get Started</Button>
-          </Link>
-        </div>
-      </motion.div>
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-center mb-16"
+            >
+                <div className="flex gap-4 items-center justify-center">
+                    <BananaIcon className={`w-12 h-12`} />
+                    <h1 className="text-5xl md:text-6xl font-extrabold font-serif mb-4 text-primary">
+                        Super Banana
+                    </h1>
+                </div>
+                <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+                    Your AI-powered toolkit for creating stunning thumbnails and professional product photos in seconds.
+                </p>
+                <div className="mt-8 flex justify-center gap-4">
+                    <Link to="/editor">
+                        <Button size="lg" variant="primary">Get Started</Button>
+                    </Link>
+                </div>
+            </motion.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <FeatureCard
-          icon={<LayoutTemplateIcon className="w-8 h-8" />}
-          title="Thumbnail Builder"
-          description="Craft click-worthy thumbnails with our intuitive drag-and-drop editor and AI-powered design suggestions."
-          to="/editor"
-        />
-        <FeatureCard
-          icon={<ImagePlusIcon className="w-8 h-8" />}
-          title="Product Photo Generator"
-          description="Transform simple product shots into lifestyle scenes, catalog-ready images, and more with a single prompt."
-          to="/product"
-        />
-        <FeatureCard
-          icon={<Wand2Icon className="w-8 h-8" />}
-          title="Magic Background Tools"
-          description="Instantly remove, replace, or generate custom backgrounds for any image, giving your visuals a professional edge."
-          to="/product"
-        />
-      </div>
-    </div>
-  );
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <FeatureCard
+                    icon={<LayoutTemplateIcon className="w-8 h-8" />}
+                    title="Thumbnail Builder"
+                    description="Craft click-worthy thumbnails with our intuitive drag-and-drop editor and AI-powered design suggestions."
+                    to="/editor"
+                />
+                <FeatureCard
+                    icon={<ImagePlusIcon className="w-8 h-8" />}
+                    title="Product Photo Generator"
+                    description="Transform simple product shots into lifestyle scenes, catalog-ready images, and more with a single prompt."
+                    to="/product"
+                />
+            </div>
+        </div>
+    );
 };
 
 export default HomePage;

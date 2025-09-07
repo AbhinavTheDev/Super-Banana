@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Banana - AI Thumbnail & Photo Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.production.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Montserrat:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --background: #f8f5f0;
+        --foreground: #3e2723;
+        --card: #f8f5f0;
+        --card-foreground: #3e2723;
+        --popover: #f8f5f0;
+        --popover-foreground: #3e2723;
+        --primary: #2e7d32;
+        --primary-foreground: #ffffff;
+        --secondary: #e8f5e9;
+        --secondary-foreground: #1b5e20;
+        --muted: #f0e9e0;
+        --muted-foreground: #6d4c41;
+        --accent: #c8e6c9;
+        --accent-foreground: #1b5e20;
+        --destructive: #c62828;
+        --destructive-foreground: #ffffff;
+        --border: #e0d6c9;
+        --input: #e0d6c9;
+        --ring: #2e7d32;
+        --sidebar: #f0e9e0;
+        --sidebar-foreground: #3e2723;
+        --sidebar-primary: #2e7d32;
+        --sidebar-primary-foreground: #ffffff;
+        --radius: 0.5rem;
+      }
+
+      .dark {
+        --background: #1c2a1f;
+        --foreground: #f0ebe5;
+        --card: #2d3a2e;
+        --card-foreground: #f0ebe5;
+        --popover: #2d3a2e;
+        --popover-foreground: #f0ebe5;
+        --primary: #4caf50;
+        --primary-foreground: #0a1f0c;
+        --secondary: #3e4a3d;
+        --secondary-foreground: #d7e0d6;
+        --muted: #2d3a2e;
+        --muted-foreground: #d7cfc4;
+        --accent: #388e3c;
+        --accent-foreground: #f0ebe5;
+        --destructive: #c62828;
+        --destructive-foreground: #f0ebe5;
+        --border: #3e4a3d;
+        --input: #3e4a3d;
+        --ring: #4caf50;
+        --sidebar: #1c2a1f;
+        --sidebar-foreground: #f0ebe5;
+        --sidebar-primary: #4caf50;
+        --sidebar-primary-foreground: #0a1f0c;
+      }
+      
+      body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: 'Montserrat', sans-serif;
+      }
+    </style>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+              serif: ['Merriweather', 'serif'],
+              mono: ['Source Code Pro', 'monospace'],
+            },
+            colors: {
+              background: 'var(--background)',
+              foreground: 'var(--foreground)',
+              card: 'var(--card)',
+              'card-foreground': 'var(--card-foreground)',
+              popover: 'var(--popover)',
+              'popover-foreground': 'var(--popover-foreground)',
+              primary: 'var(--primary)',
+              'primary-foreground': 'var(--primary-foreground)',
+              secondary: 'var(--secondary)',
+              'secondary-foreground': 'var(--secondary-foreground)',
+              muted: 'var(--muted)',
+              'muted-foreground': 'var(--muted-foreground)',
+              accent: 'var(--accent)',
+              'accent-foreground': 'var(--accent-foreground)',
+              destructive: 'var(--destructive)',
+              'destructive-foreground': 'var(--destructive-foreground)',
+              border: 'var(--border)',
+              input: 'var(--input)',
+              ring: 'var(--ring)',
+              sidebar: 'var(--sidebar)',
+              'sidebar-foreground': 'var(--sidebar-foreground)',
+              'sidebar-primary': 'var(--sidebar-primary)',
+              'sidebar-primary-foreground': 'var(--sidebar-primary-foreground)',
+            },
+            borderRadius: {
+              lg: "var(--radius)",
+              md: "calc(var(--radius) - 2px)",
+              sm: "calc(var(--radius) - 4px)",
+            },
+            boxShadow: {
+                'sm': '0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 1px 2px -1px hsl(0 0% 0% / 0.10)',
+                'md': '0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 2px 4px -1px hsl(0 0% 0% / 0.10)',
+                'lg': '0 1px 3px 0px hsl(0 0% 0% / 0.10), 0 4px 6px -1px hsl(0 0% 0% / 0.10)',
+            }
+          },
+        },
+      };
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.17.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.8.2",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.12"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

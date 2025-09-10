@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,6 +7,7 @@ import Spinner from '../components/ui/Spinner';
 import { ImagePlusIcon, Wand2Icon } from '../components/icons/LucideIcons';
 import * as geminiService from '../services/geminiService';
 import { useHistory } from '../hooks/useHistory';
+import { useSettings } from '../hooks/useSettings';
 
 
 interface ImageFile {
@@ -18,7 +18,8 @@ interface ImageFile {
 const ProductPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { addProductPhoto, productHistory } = useHistory();
+    const { addProductPhotoShoot, productPhotoShootHistory } = useHistory();
+    const { productPhotoShootExamples } = useSettings();
     const [imageFile, setImageFile] = useState<ImageFile | null>(null);
     const [prompt, setPrompt] = useState<string>('On a white marble countertop with soft, natural morning light.');
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
@@ -27,7 +28,7 @@ const ProductPage: React.FC = () => {
 
     useEffect(() => {
         if (id) {
-            const item = productHistory.find(i => i.id === id);
+            const item = productPhotoShootHistory.find(i => i.id === id);
             if (item) {
                 setGeneratedImage(item.imageData);
                 setImageFile(null); // Clear uploader
@@ -41,7 +42,7 @@ const ProductPage: React.FC = () => {
             setImageFile(null);
             setPrompt('On a white marble countertop with soft, natural morning light.');
         }
-    }, [id, productHistory, navigate]);
+    }, [id, productPhotoShootHistory, navigate]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -62,12 +63,12 @@ const ProductPage: React.FC = () => {
             const base64 = await geminiService.fileToBase64(imageFile.file);
             const mimeType = imageFile.file.type;
             
-            const result = await geminiService.generateProductPhoto(base64, mimeType, prompt);
+            const result = await geminiService.generateProductPhotoShoot(base64, mimeType, prompt, productPhotoShootExamples);
 
             if (result) {
                 const dataUrl = `data:${mimeType};base64,${result}`;
                 setGeneratedImage(dataUrl);
-                addProductPhoto(dataUrl);
+                addProductPhotoShoot(dataUrl, prompt, { base64Data: base64, mimeType });
             }
         } catch (error) {
             console.error(error);
@@ -80,7 +81,7 @@ const ProductPage: React.FC = () => {
     return (
         <div className="container mx-auto max-w-5xl">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center mb-8">
-                <h1 className="text-4xl font-bold font-serif">Product Photo Generator</h1>
+                <h1 className="text-4xl font-bold font-serif">Product Photoshoot</h1>
                 <p className="text-muted-foreground mt-2">Upload your product, describe a scene, and let AI create stunning photos.</p>
             </motion.div>
 
@@ -115,7 +116,7 @@ const ProductPage: React.FC = () => {
                         
                         <Button onClick={handleGenerate} disabled={isLoading || !imageFile} className="w-full" size="lg">
                             {isLoading ? <Spinner size="sm" /> : <Wand2Icon className="w-5 h-5 mr-2" />}
-                            {isLoading ? 'Generating...' : 'Generate Photos'}
+                            {isLoading ? 'Generating...' : 'Start Photoshoot'}
                         </Button>
                     </CardContent>
                 </Card>
@@ -133,7 +134,7 @@ const ProductPage: React.FC = () => {
                             ) : generatedImage ? (
                                 <img src={generatedImage} alt="Generated product" className="max-h-full max-w-full object-contain rounded-lg shadow-md" />
                             ) : (
-                                <p className="text-muted-foreground text-center px-4">Your generated product photos will appear here.</p>
+                                <p className="text-muted-foreground text-center px-4">Your product photoshoot results will appear here.</p>
                             )}
                         </div>
                     </CardContent>

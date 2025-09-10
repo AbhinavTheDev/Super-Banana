@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import { useTheme } from '../../hooks/useTheme';
 import Button from '../ui/Button';
-import { SunIcon, MoonIcon, MenuIcon, BananaIcon } from '../icons/LucideIcons';
+import { SunIcon, MoonIcon, MenuIcon, BananaIcon, SettingsIcon } from '../icons/LucideIcons';
+import { useSettings } from '../../hooks/useSettings';
 
 // This is a placeholder for a real sidebar state management
 const toggleSidebar = () => {
@@ -14,6 +15,7 @@ const toggleSidebar = () => {
 
 const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const { toggleSettings } = useSettings();
 
   return (
     <header className="flex items-center justify-between h-16 px-4 bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-30 w-full shrink-0">
@@ -28,7 +30,10 @@ const Header: React.FC = () => {
           </div>
         </Link>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="sm" onClick={toggleSettings}>
+          <SettingsIcon className="w-5 h-5" />
+        </Button>
         <Button variant="ghost" size="sm" onClick={toggleTheme}>
           {theme === 'light' ? <MoonIcon className="w-5 h-5" /> : <SunIcon className="w-5 h-5" />}
         </Button>

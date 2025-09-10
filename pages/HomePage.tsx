@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -49,7 +48,7 @@ const HomePage: React.FC = () => {
                 </div>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 gap-8">
                 <FeatureCard
                     icon={<LayoutTemplateIcon className="w-8 h-8" />}
                     title="Thumbnail Builder"
@@ -58,7 +57,7 @@ const HomePage: React.FC = () => {
                 />
                 <FeatureCard
                     icon={<ImagePlusIcon className="w-8 h-8" />}
-                    title="Product Photo Generator"
+                    title="Product Photoshoot"
                     description="Transform simple product shots into lifestyle scenes, catalog-ready images, and more with a single prompt."
                     to="/product"
                 />

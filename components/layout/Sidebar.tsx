@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useHistory } from '../../hooks/useHistory';
@@ -41,14 +40,14 @@ const HistoryItemLink: React.FC<{ to: string; title: string; onDelete: () => voi
 };
 
 const Sidebar: React.FC = () => {
-    const { thumbnailHistory, productHistory, deleteThumbnail, deleteProductPhoto } = useHistory();
+    const { thumbnailHistory, productPhotoShootHistory, deleteThumbnail, deleteProductPhotoShoot } = useHistory();
 
     return (
-        <aside id="sidebar" className="bg-sidebar w-72 h-[calc(100vh-4rem)] p-4 border-r border-sidebar-border
+        <aside id="sidebar" className="bg-sidebar w-74 h-[calc(100vh-4rem)] p-4 border-r border-sidebar-border
             absolute md:static -translate-x-full md:translate-x-0 
             transition-transform duration-300 ease-in-out z-20 overflow-y-auto">
             <nav className="flex flex-col gap-6">
-                <NavSection to="/editor" icon={<LayoutTemplateIcon />} label="Thumbnail Builder">
+                <NavSection to="/editor" icon={<LayoutTemplateIcon />} label="Thumbnails">
                    {thumbnailHistory.length > 0 ? (
                         <ul className="space-y-1">
                            {thumbnailHistory.slice().reverse().map(item => (
@@ -59,12 +58,12 @@ const Sidebar: React.FC = () => {
                        </ul>
                    ) : <p className="text-xs text-muted-foreground pl-2">No thumbnails created yet.</p>}
                 </NavSection>
-                 <NavSection to="/product" icon={<ImagePlusIcon />} label="Product Photos">
-                   {productHistory.length > 0 ? (
+                 <NavSection to="/product" icon={<ImagePlusIcon />} label="Product Photoshoot">
+                   {productPhotoShootHistory.length > 0 ? (
                        <ul className="space-y-1">
-                           {productHistory.slice().reverse().map(item => (
+                           {productPhotoShootHistory.slice().reverse().map(item => (
                                <li key={item.id}>
-                                   <HistoryItemLink to={`/product/${item.id}`} title={item.title} onDelete={() => deleteProductPhoto(item.id)} />
+                                   <HistoryItemLink to={`/product/${item.id}`} title={item.title} onDelete={() => deleteProductPhotoShoot(item.id)} />
                                </li>
                            ))}
                        </ul>

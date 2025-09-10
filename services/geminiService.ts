@@ -1,15 +1,11 @@
 import { GoogleGenAI, Modality, GenerateContentResponse, Part } from "@google/genai";
+import { ImagePart } from '../types';
 
 if (!process.env.API_KEY) {
     console.warn("API_KEY environment variable not set. Using mock service.");
 }
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || "mock-key" });
-
-export interface ImagePart {
-    base64Data: string;
-    mimeType: string;
-}
 
 export const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -38,52 +34,63 @@ const mockImageResponse = async (prompt: string): Promise<string> => {
     });
 };
 
-export const removeBackground = async (base64ImageData: string, mimeType: string): Promise<string | null> => {
+export const generateScene = async (prompt: string): Promise<string | null> => {
     if (!process.env.API_KEY) {
-        return mockImageResponse("Background Removed");
+        return mockImageResponse(prompt);
     }
-
     try {
-        const response: GenerateContentResponse = await ai.models.generateContent({
-            model: 'gemini-2.5-flash-image-preview',
-            contents: {
-                parts: [
-                    { inlineData: { data: base64ImageData, mimeType } },
-                    { text: 'Remove the background of this image, leaving only the main subject with a transparent background.' },
-                ],
-            },
+        const response = await ai.models.generateImages({
+            model: 'imagen-4.0-generate-001',
+            prompt: `A high-quality, professional background scene for a thumbnail, based on the following description: ${prompt}`,
             config: {
-                responseModalities: [Modality.IMAGE, Modality.TEXT],
+              numberOfImages: 1,
+              outputMimeType: 'image/jpeg',
+              aspectRatio: '16:9',
             },
         });
-        
-        for (const part of response.candidates[0].content.parts) {
-            if (part.inlineData) {
-                return part.inlineData.data;
-            }
+
+        if (response.generatedImages && response.generatedImages.length > 0) {
+            return response.generatedImages[0].image.imageBytes;
         }
         return null;
-
     } catch (error) {
-        console.error("Error removing background:", error);
-        throw new Error("Failed to remove background. Please try again.");
+        console.error("Error generating scene:", error);
+        throw new Error("Failed to generate scene. The prompt may have been rejected. Please try a different description.");
     }
 };
 
-export const generateProductPhoto = async (base64ImageData: string, mimeType: string, prompt: string): Promise<string | null> => {
+export const generateProductPhotoShoot = async (base64ImageData: string, mimeType: string, prompt: string, examples: ImagePart[]): Promise<string | null> => {
     if (!process.env.API_KEY) {
         return mockImageResponse(prompt);
     }
     
     try {
+        let systemPrompt: string;
+        const contentParts: Part[] = [];
+
+        if (examples.length > 0) {
+            systemPrompt = `You are a professional product photographer. Your task is to place the subject from the user's image into a new scene.
+**Critically, you must emulate the exact style, lighting, mood, and composition of the example images provided.**
+Use the examples as a strict style guide. Then, apply that style to the user's subject and the scene described in their prompt. Ensure the final image is photorealistic and of commercial quality.`;
+            
+            examples.forEach(ex => {
+                contentParts.push({ inlineData: { data: ex.base64Data, mimeType: ex.mimeType } });
+            });
+        } else {
+            // Improved Zero-shot
+            systemPrompt = `You are a world-class commercial product photographer. Your task is to take the subject from the provided image and place it into a new, photorealistic scene based on the user's prompt.
+**Key requirements:**
+1.  **Photorealism:** The integration must be seamless. The lighting, shadows, reflections, and perspective on the subject MUST perfectly match the new environment described in the prompt.
+2.  **Focus:** The product should be the clear hero of the image.
+3.  **Quality:** The final output must be high-resolution, sharp, and suitable for a professional advertising campaign or e-commerce store.`;
+        }
+        
+        contentParts.push({ inlineData: { data: base64ImageData, mimeType } });
+        contentParts.push({ text: `${systemPrompt}\n\n**Scene Prompt:** ${prompt}` });
+
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: 'gemini-2.5-flash-image-preview',
-            contents: {
-                parts: [
-                    { inlineData: { data: base64ImageData, mimeType } },
-                    { text: `Place the subject of this image in the following scene: ${prompt}. Ensure the lighting and shadows on the subject match the new background realistically.` },
-                ],
-            },
+            contents: { parts: contentParts },
             config: {
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
             },
@@ -96,43 +103,57 @@ export const generateProductPhoto = async (base64ImageData: string, mimeType: st
         }
         return null;
     } catch (error) {
-        console.error("Error generating product photo:", error);
-        throw new Error("Failed to generate product photo. Please try again.");
+        console.error("Error generating product photoshoot:", error);
+        throw new Error("Failed to generate product photoshoot. Please try again.");
     }
 };
 
-export const generateThumbnail = async (prompt: string, images: ImagePart[], presetName: string): Promise<string | null> => {
+export const generateThumbnail = async (prompt: string, images: ImagePart[], presetName: string, examples: ImagePart[]): Promise<string | null> => {
     if (!process.env.API_KEY) {
         return mockImageResponse(`Thumbnail for: ${prompt}`);
     }
 
     try {
-        const systemPrompt = `You are a professional graphic designer specializing in creating viral, eye-catching YouTube thumbnails.
+        let systemPrompt: string;
+        const contentParts: Part[] = [];
+
+        if (examples.length > 0) {
+            // Few-shot prompt
+            systemPrompt = `You are a professional graphic designer tasked with creating a thumbnail.
+**Your primary goal is to replicate the artistic style, composition, and visual energy of the example thumbnails provided.**
+Analyze the examples for their use of color, text effects, layout, and overall mood.
+Then, apply this exact style to the new assets and prompt provided by the user to create a new, cohesive thumbnail for the ${presetName} platform.`
+
+            examples.forEach(ex => {
+                contentParts.push({ inlineData: { data: ex.base64Data, mimeType: ex.mimeType } });
+            });
+        } else {
+            // Improved Zero-shot prompt
+            systemPrompt = `You are a world-class graphic designer specializing in creating viral, eye-catching thumbnails for platforms like YouTube.
 Your task is to generate a single, cohesive, and professional thumbnail image based on the provided assets and user prompt.
 
-**Instructions:**
-1.  **Analyze and Utilize All Assets:** You MUST use all the image assets provided. Integrate them logically into a final, polished thumbnail.
-2.  **Seamless Background Integration:** If an asset has a distinct background, you MUST remove the background and seamlessly blend the main subject into the new thumbnail's scene.
-3.  **Handle Text Assets:** If an asset is an image containing text, DO NOT regenerate or replace the text. Instead, use the text as it is. You may apply minimal stylistic edits (like adding a stroke or shadow) to improve its clarity and integration, but the wording must remain identical.
-4.  **Feature People Prominently:** If one of the assets features a person, make them a primary focal point. Position and scale them in a dynamic, engaging way, similar to how top YouTubers appear in their thumbnails.
-5.  **Follow the Prompt:** Adhere closely to the user's prompt for the overall theme, mood, style, and any specific text or elements to include.
-6.  **Final Output:** The final result should be a single, complete thumbnail image ready for upload, designed for the ${presetName} platform.`;
-        
-        const contentParts: Part[] = [
-            { text: `${systemPrompt}\n\nUser Prompt: ${prompt}` }
-        ];
+**Core Design Principles:**
+1.  **High Contrast & Readability:** Use bold, contrasting colors. If text is requested, it must be large, easy to read, and pop from the background (e.g., using strokes, shadows, or contrasting color blocks).
+2.  **Focal Point:** There must be a clear, primary subject. If a person is present in the assets, make them the focal point. Use dynamic poses and exaggerated emotions if appropriate for the topic.
+3.  **Dynamic Composition:** Arrange elements using principles like the rule of thirds. Create a sense of depth and energy. Avoid flat, centered layouts unless specifically requested.
+4.  **Emotional Impact:** The thumbnail should evoke curiosity, excitement, or another strong emotion relevant to the prompt.
+5.  **Asset Integration:** You MUST use all the image assets provided. If an asset has a background, it should be expertly removed and the subject seamlessly blended into the new scene.
 
+**Your Task:**
+Adhere to these principles and the user's prompt to create a complete thumbnail for the ${presetName} platform.`;
+        }
+        
         images.forEach(image => {
             contentParts.push({
                 inlineData: { data: image.base64Data, mimeType: image.mimeType }
             });
         });
 
+        contentParts.push({ text: `${systemPrompt}\n\nUser Prompt: ${prompt}` });
+
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: 'gemini-2.5-flash-image-preview',
-            contents: {
-                parts: contentParts,
-            },
+            contents: { parts: contentParts },
             config: {
                 responseModalities: [Modality.IMAGE, Modality.TEXT],
             },

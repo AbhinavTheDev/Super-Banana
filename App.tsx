@@ -4,8 +4,10 @@ import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, Transition } from 'framer-motion';
 import { ThemeProvider } from './hooks/useTheme';
 import { HistoryProvider } from './hooks/useHistory';
+import { SettingsProvider } from './hooks/useSettings';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
+import SettingsModal from './components/layout/SettingsModal';
 import HomePage from './pages/HomePage';
 import EditorPage from './pages/EditorPage';
 import ProductPage from './pages/ProductPage';
@@ -65,6 +67,7 @@ const AppContent: React.FC = () => {
                 </PageWrapper>
             </main>
         </div>
+        <SettingsModal />
     </div>
   );
 };
@@ -73,9 +76,11 @@ const App: React.FC = () => {
   return (
     <ThemeProvider>
       <HistoryProvider>
-        <HashRouter>
-          <AppContent />
-        </HashRouter>
+        <SettingsProvider>
+          <HashRouter>
+            <AppContent />
+          </HashRouter>
+        </SettingsProvider>
       </HistoryProvider>
     </ThemeProvider>
   );

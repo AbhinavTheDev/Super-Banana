@@ -5,14 +5,10 @@ import { Theme, ThemeContextType } from '../types';
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') as Theme | null;
+  const [theme, setTheme] = useState<Theme>(() => {
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
-  }, []);
+    return prefersDark ? 'dark' : 'light';
+  });
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -20,7 +16,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } else {
       document.documentElement.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {

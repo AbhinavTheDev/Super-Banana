@@ -1,67 +1,52 @@
-
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { HistoryItem, HistoryContextType } from '../types';
+import { HistoryItem, HistoryContextType, ImagePart } from '../types';
 
 const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 
-const getInitialState = <T,>(key: string): T[] => {
-  try {
-    const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : [];
-  } catch (error) {
-    console.error(`Error reading localStorage key “${key}”:`, error);
-    return [];
-  }
-};
-
 export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [thumbnailHistory, setThumbnailHistory] = useState<HistoryItem[]>(() => getInitialState<HistoryItem>('thumbnail_history'));
-  const [productHistory, setProductHistory] = useState<HistoryItem[]>(() => getInitialState<HistoryItem>('product_history'));
-
-  useEffect(() => {
-    localStorage.setItem('thumbnail_history', JSON.stringify(thumbnailHistory));
-  }, [thumbnailHistory]);
-
-  useEffect(() => {
-    localStorage.setItem('product_history', JSON.stringify(productHistory));
-  }, [productHistory]);
+  const [thumbnailHistory, setThumbnailHistory] = useState<HistoryItem[]>([]);
+  const [productPhotoShootHistory, setProductPhotoShootHistory] = useState<HistoryItem[]>([]);
   
-  const addThumbnail = (imageData: string) => {
+  const addThumbnail = (imageData: string, prompt: string, assets: ImagePart[]) => {
     const newItem: HistoryItem = {
       id: Date.now().toString(),
       title: `Thumbnail #${thumbnailHistory.length + 1}`,
       imageData,
       createdAt: Date.now(),
+      prompt,
+      assets,
     };
     setThumbnailHistory(prev => [...prev, newItem]);
   };
 
-  const addProductPhoto = (imageData: string) => {
+  const addProductPhotoShoot = (imageData: string, prompt: string, asset: ImagePart) => {
     const newItem: HistoryItem = {
       id: Date.now().toString(),
-      title: `Product Img #${productHistory.length + 1}`,
+      title: `Photoshoot #${productPhotoShootHistory.length + 1}`,
       imageData,
       createdAt: Date.now(),
+      prompt,
+      assets: [asset],
     };
-    setProductHistory(prev => [...prev, newItem]);
+    setProductPhotoShootHistory(prev => [...prev, newItem]);
   };
 
   const deleteThumbnail = (id: string) => {
     setThumbnailHistory(prev => prev.filter(item => item.id !== id));
   };
   
-  const deleteProductPhoto = (id: string) => {
-    setProductHistory(prev => prev.filter(item => item.id !== id));
+  const deleteProductPhotoShoot = (id: string) => {
+    setProductPhotoShootHistory(prev => prev.filter(item => item.id !== id));
   };
 
   const value = useMemo(() => ({
     thumbnailHistory,
-    productHistory,
+    productPhotoShootHistory,
     addThumbnail,
-    addProductPhoto,
+    addProductPhotoShoot,
     deleteThumbnail,
-    deleteProductPhoto
-  }), [thumbnailHistory, productHistory]);
+    deleteProductPhotoShoot
+  }), [thumbnailHistory, productPhotoShootHistory]);
 
   return (
     <HistoryContext.Provider value={value}>

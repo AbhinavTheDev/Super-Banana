@@ -32,10 +32,13 @@ export interface HistoryItem {
 export interface HistoryContextType {
   thumbnailHistory: HistoryItem[];
   productPhotoShootHistory: HistoryItem[];
+  mathVisualizerHistory: HistoryItem[];
   addThumbnail: (imageData: string, prompt: string, assets: ImagePart[]) => void;
   addProductPhotoShoot: (imageData: string, prompt: string, asset: ImagePart) => void;
+  addMathVisualization: (imageData: string, prompt: string) => void;
   deleteThumbnail: (id: string) => void;
   deleteProductPhotoShoot: (id: string) => void;
+  deleteMathVisualization: (id: string) => void;
 }
 
 export interface SettingsContextType {

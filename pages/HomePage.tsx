@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
-import { LayoutTemplateIcon, ImagePlusIcon, Wand2Icon, BananaIcon } from '../components/icons/LucideIcons';
+import { LayoutTemplateIcon, ImagePlusIcon, SigmaIcon, BananaIcon } from '../components/icons/LucideIcons';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string; to: string; }> = ({ icon, title, description, to }) => (
     <motion.div whileHover={{ y: -5 }} className="w-full">
@@ -48,7 +48,7 @@ const HomePage: React.FC = () => {
                 </div>
             </motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-3 gap-8">
                 <FeatureCard
                     icon={<LayoutTemplateIcon className="w-8 h-8" />}
                     title="Thumbnail Builder"
@@ -60,6 +60,12 @@ const HomePage: React.FC = () => {
                     title="Product Photoshoot"
                     description="Transform simple product shots into lifestyle scenes, catalog-ready images, and more with a single prompt."
                     to="/product"
+                />
+                <FeatureCard
+                    icon={<SigmaIcon className="w-8 h-8" />}
+                    title="Math Visualizer"
+                    description="Turn mathematical equations and concepts into stunning, abstract art with the power of AI."
+                    to="/visualizer"
                 />
             </div>
         </div>

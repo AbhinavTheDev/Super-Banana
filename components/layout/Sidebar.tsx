@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { useHistory } from '../../hooks/useHistory';
-import { ImagePlusIcon, LayoutTemplateIcon, TrashIcon } from '../icons/LucideIcons';
+import { ImagePlusIcon, LayoutTemplateIcon, TrashIcon, SigmaIcon } from '../icons/LucideIcons';
 
 const NavSection: React.FC<{ to: string, icon: React.ReactNode, label: string, children?: React.ReactNode }> = ({ to, icon, label, children }) => (
     <div>
@@ -40,7 +40,14 @@ const HistoryItemLink: React.FC<{ to: string; title: string; onDelete: () => voi
 };
 
 const Sidebar: React.FC = () => {
-    const { thumbnailHistory, productPhotoShootHistory, deleteThumbnail, deleteProductPhotoShoot } = useHistory();
+    const { 
+        thumbnailHistory, 
+        productPhotoShootHistory, 
+        mathVisualizerHistory,
+        deleteThumbnail, 
+        deleteProductPhotoShoot,
+        deleteMathVisualization
+    } = useHistory();
 
     return (
         <aside id="sidebar" className="bg-sidebar w-74 h-[calc(100vh-4rem)] p-4 border-r border-sidebar-border
@@ -68,6 +75,17 @@ const Sidebar: React.FC = () => {
                            ))}
                        </ul>
                    ) : <p className="text-xs text-muted-foreground pl-2">No product photos created yet.</p>}
+                </NavSection>
+                <NavSection to="/visualizer" icon={<SigmaIcon />} label="Math Visualizer">
+                   {mathVisualizerHistory.length > 0 ? (
+                       <ul className="space-y-1">
+                           {mathVisualizerHistory.slice().reverse().map(item => (
+                               <li key={item.id}>
+                                   <HistoryItemLink to={`/visualizer/${item.id}`} title={item.title} onDelete={() => deleteMathVisualization(item.id)} />
+                               </li>
+                           ))}
+                       </ul>
+                   ) : <p className="text-xs text-muted-foreground pl-2">No visualizations created yet.</p>}
                 </NavSection>
             </nav>
         </aside>

@@ -46,6 +46,10 @@ export const TrashIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg {...iconProps} className={className}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
 );
 
+export const SigmaIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg {...iconProps} className={className}><path d="M4 7V4h16v3"/><path d="M4 17v3h16v-3"/><path d="m18 4-8 8 8 8"/></svg>
+);
+
 export const BananaIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg className={className} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 	<path fill="#ffe8b6" d="M28 2c2.684-1.342 5 4 3 13c-1.106 4.977-5 9-9 12s-11-1-7-5s8-7 10-13c1.304-3.912 1-6 3-7"></path>

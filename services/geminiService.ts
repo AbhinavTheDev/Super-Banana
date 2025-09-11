@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Modality, GenerateContentResponse, Part } from "@google/genai";
 import { ImagePart } from '../types';
 
@@ -21,7 +22,7 @@ const mockImageResponse = async (prompt: string): Promise<string> => {
     console.log(`Mock AI call for: ${prompt}`);
     const color1 = Math.floor(Math.random()*16777215).toString(16);
     const color2 = Math.floor(Math.random()*16777215).toString(16);
-    const mockImageUrl = `https://via.placeholder.com/1280x720/${color1}/${color2}?text=${encodeURIComponent(prompt.slice(0, 50))}`;
+    const mockImageUrl = `https://via.placeholder.com/1024x1024/${color1}/${color2}?text=${encodeURIComponent(prompt.slice(0, 50))}`;
     
     // Convert URL to base64 to simulate API response format
     const response = await fetch(mockImageUrl);
@@ -169,5 +170,32 @@ Adhere to these principles and the user's prompt to create a complete thumbnail 
     } catch (error) {
         console.error("Error generating thumbnail:", error);
         throw new Error("Failed to generate thumbnail. Please try again.");
+    }
+};
+
+export const generateMathVisualization = async (prompt: string): Promise<string | null> => {
+    if (!process.env.API_KEY) {
+        return mockImageResponse(`Math Art: ${prompt}`);
+    }
+    try {
+        const engineeredPrompt = `Create a visually stunning, beautiful, and artistic abstract visualization inspired by the following mathematical concept or equation. The artwork should be an interpretation, not a literal graph or plot. Focus on aesthetic beauty, intricate patterns, and vibrant colors that evoke the essence of the mathematics. Concept: "${prompt}"`;
+
+        const response = await ai.models.generateImages({
+            model: 'imagen-4.0-generate-001',
+            prompt: engineeredPrompt,
+            config: {
+              numberOfImages: 1,
+              outputMimeType: 'image/jpeg',
+              aspectRatio: '1:1',
+            },
+        });
+
+        if (response.generatedImages && response.generatedImages.length > 0) {
+            return response.generatedImages[0].image.imageBytes;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error generating math visualization:", error);
+        throw new Error("Failed to generate visualization. The prompt may have been rejected. Please try a different concept.");
     }
 };

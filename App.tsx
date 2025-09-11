@@ -13,6 +13,7 @@ import EditorPage from './pages/EditorPage';
 import ProductPage from './pages/ProductPage';
 import HistoryPage from './pages/HistoryPage';
 import SettingsPage from './pages/SettingsPage';
+import MathVisualizerPage from './pages/MathVisualizerPage';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -35,6 +36,7 @@ const AnimatedRoutes: React.FC = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/editor/:id?" element={<EditorPage />} />
         <Route path="/product/:id?" element={<ProductPage />} />
+        <Route path="/visualizer/:id?" element={<MathVisualizerPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>

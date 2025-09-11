@@ -6,6 +6,7 @@ const HistoryContext = createContext<HistoryContextType | undefined>(undefined);
 export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [thumbnailHistory, setThumbnailHistory] = useState<HistoryItem[]>([]);
   const [productPhotoShootHistory, setProductPhotoShootHistory] = useState<HistoryItem[]>([]);
+  const [mathVisualizerHistory, setMathVisualizerHistory] = useState<HistoryItem[]>([]);
   
   const addThumbnail = (imageData: string, prompt: string, assets: ImagePart[]) => {
     const newItem: HistoryItem = {
@@ -31,6 +32,17 @@ export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setProductPhotoShootHistory(prev => [...prev, newItem]);
   };
 
+  const addMathVisualization = (imageData: string, prompt: string) => {
+    const newItem: HistoryItem = {
+      id: Date.now().toString(),
+      title: `Vis #${mathVisualizerHistory.length + 1}: ${prompt.substring(0, 15)}${prompt.length > 15 ? '...' : ''}`,
+      imageData,
+      createdAt: Date.now(),
+      prompt,
+    };
+    setMathVisualizerHistory(prev => [...prev, newItem]);
+  };
+
   const deleteThumbnail = (id: string) => {
     setThumbnailHistory(prev => prev.filter(item => item.id !== id));
   };
@@ -39,14 +51,21 @@ export const HistoryProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setProductPhotoShootHistory(prev => prev.filter(item => item.id !== id));
   };
 
+  const deleteMathVisualization = (id: string) => {
+    setMathVisualizerHistory(prev => prev.filter(item => item.id !== id));
+  };
+
   const value = useMemo(() => ({
     thumbnailHistory,
     productPhotoShootHistory,
+    mathVisualizerHistory,
     addThumbnail,
     addProductPhotoShoot,
+    addMathVisualization,
     deleteThumbnail,
-    deleteProductPhotoShoot
-  }), [thumbnailHistory, productPhotoShootHistory]);
+    deleteProductPhotoShoot,
+    deleteMathVisualization
+  }), [thumbnailHistory, productPhotoShootHistory, mathVisualizerHistory]);
 
   return (
     <HistoryContext.Provider value={value}>

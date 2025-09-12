@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
-import { LayoutTemplateIcon, ImagePlusIcon, SigmaIcon, BananaIcon } from '../components/icons/LucideIcons';
+import { LayoutTemplateIcon, ImagePlusIcon, SparklesIcon, BananaIcon } from '../components/icons/LucideIcons';
 
 const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; description: string; to: string; }> = ({ icon, title, description, to }) => (
     <motion.div whileHover={{ y: -5 }} className="w-full">
@@ -62,10 +63,10 @@ const HomePage: React.FC = () => {
                     to="/product"
                 />
                 <FeatureCard
-                    icon={<SigmaIcon className="w-8 h-8" />}
-                    title="Math Visualizer"
-                    description="Turn mathematical equations and concepts into stunning, abstract art with the power of AI."
-                    to="/visualizer"
+                    icon={<SparklesIcon className="w-8 h-8" />}
+                    title="Reimaginer"
+                    description="Bring your ideas to life. Transform your images or generate new ones from text with our creative AI."
+                    to="/reimaginer"
                 />
             </div>
         </div>

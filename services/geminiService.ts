@@ -173,29 +173,51 @@ Adhere to these principles and the user's prompt to create a complete thumbnail 
     }
 };
 
-export const generateMathVisualization = async (prompt: string): Promise<string | null> => {
+export const reimagineImage = async (prompt: string, image?: ImagePart): Promise<string | null> => {
     if (!process.env.API_KEY) {
-        return mockImageResponse(`Math Art: ${prompt}`);
+        return mockImageResponse(prompt);
     }
+
     try {
-        const engineeredPrompt = `Create a visually stunning, beautiful, and artistic abstract visualization inspired by the following mathematical concept or equation. The artwork should be an interpretation, not a literal graph or plot. Focus on aesthetic beauty, intricate patterns, and vibrant colors that evoke the essence of the mathematics. Concept: "${prompt}"`;
-
-        const response = await ai.models.generateImages({
-            model: 'imagen-4.0-generate-001',
-            prompt: engineeredPrompt,
-            config: {
-              numberOfImages: 1,
-              outputMimeType: 'image/jpeg',
-              aspectRatio: '1:1',
-            },
-        });
-
-        if (response.generatedImages && response.generatedImages.length > 0) {
-            return response.generatedImages[0].image.imageBytes;
+        // Case 1: Image-to-Image (Editing)
+        if (image) {
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.5-flash-image-preview',
+                contents: {
+                    parts: [
+                        { inlineData: { data: image.base64Data, mimeType: image.mimeType } },
+                        { text: prompt },
+                    ],
+                },
+                config: {
+                    responseModalities: [Modality.IMAGE, Modality.TEXT],
+                },
+            });
+            for (const part of response.candidates[0].content.parts) {
+                if (part.inlineData) {
+                    return part.inlineData.data;
+                }
+            }
+            return null;
+        } 
+        // Case 2: Text-to-Image
+        else {
+            const response = await ai.models.generateImages({
+                model: 'imagen-4.0-generate-001',
+                prompt: prompt,
+                config: {
+                  numberOfImages: 1,
+                  outputMimeType: 'image/jpeg',
+                  aspectRatio: '1:1',
+                },
+            });
+            if (response.generatedImages && response.generatedImages.length > 0) {
+                return response.generatedImages[0].image.imageBytes;
+            }
+            return null;
         }
-        return null;
     } catch (error) {
-        console.error("Error generating math visualization:", error);
-        throw new Error("Failed to generate visualization. The prompt may have been rejected. Please try a different concept.");
+        console.error("Error in reimagineImage:", error);
+        throw new Error("Failed to generate image. The prompt may have been rejected or the service is unavailable.");
     }
 };

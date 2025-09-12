@@ -46,8 +46,21 @@ export const TrashIcon: React.FC<{ className?: string }> = ({ className }) => (
     <svg {...iconProps} className={className}><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
 );
 
+export const SparklesIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg {...iconProps} className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+);
+
+export const SaveIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg {...iconProps} className={className}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+);
+
+export const CheckIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg {...iconProps} className={className}><polyline points="20 6 9 17 4 12" /></svg>
+);
+
+// Fix: Add SigmaIcon for the Math Visualizer page.
 export const SigmaIcon: React.FC<{ className?: string }> = ({ className }) => (
-    <svg {...iconProps} className={className}><path d="M4 7V4h16v3"/><path d="M4 17v3h16v-3"/><path d="m18 4-8 8 8 8"/></svg>
+    <svg {...iconProps} className={className}><path d="M4 7V4h16v3l-8 7 8 7v3H4v-3l8-7-8-7z"/></svg>
 );
 
 export const BananaIcon: React.FC<{ className?: string }> = ({ className }) => (

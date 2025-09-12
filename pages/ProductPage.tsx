@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Spinner from '../components/ui/Spinner';
-import { ImagePlusIcon, Wand2Icon } from '../components/icons/LucideIcons';
+import { ImagePlusIcon, Wand2Icon, SaveIcon, CheckIcon, DownloadIcon } from '../components/icons/LucideIcons';
 import * as geminiService from '../services/geminiService';
 import { useHistory } from '../hooks/useHistory';
 import { useSettings } from '../hooks/useSettings';
+import { ImagePart } from '../types';
 
 
 interface ImageFile {
@@ -24,6 +26,8 @@ const ProductPage: React.FC = () => {
     const [prompt, setPrompt] = useState<string>('On a white marble countertop with soft, natural morning light.');
     const [generatedImage, setGeneratedImage] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isSaved, setIsSaved] = useState(false);
+    const [generationAsset, setGenerationAsset] = useState<ImagePart | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -33,6 +37,7 @@ const ProductPage: React.FC = () => {
                 setGeneratedImage(item.imageData);
                 setImageFile(null); // Clear uploader
                 setPrompt('');
+                setIsSaved(true);
             } else {
                 navigate('/product');
             }
@@ -41,6 +46,7 @@ const ProductPage: React.FC = () => {
             setGeneratedImage(null);
             setImageFile(null);
             setPrompt('On a white marble countertop with soft, natural morning light.');
+            setIsSaved(false);
         }
     }, [id, productPhotoShootHistory, navigate]);
 
@@ -59,16 +65,18 @@ const ProductPage: React.FC = () => {
         }
         setIsLoading(true);
         setGeneratedImage(null);
+        setIsSaved(false);
         try {
             const base64 = await geminiService.fileToBase64(imageFile.file);
             const mimeType = imageFile.file.type;
+            
+            setGenerationAsset({ base64Data: base64, mimeType });
             
             const result = await geminiService.generateProductPhotoShoot(base64, mimeType, prompt, productPhotoShootExamples);
 
             if (result) {
                 const dataUrl = `data:${mimeType};base64,${result}`;
                 setGeneratedImage(dataUrl);
-                addProductPhotoShoot(dataUrl, prompt, { base64Data: base64, mimeType });
             }
         } catch (error) {
             console.error(error);
@@ -77,6 +85,22 @@ const ProductPage: React.FC = () => {
             setIsLoading(false);
         }
     };
+
+    const handleSave = () => {
+        if (generatedImage && generationAsset && prompt && !isSaved) {
+            addProductPhotoShoot(generatedImage, prompt, generationAsset);
+            setIsSaved(true);
+        }
+    };
+    
+    const handleExport = useCallback(() => {
+        if (!generatedImage) return;
+        const link = document.createElement('a');
+        link.download = `product-photoshoot-${Date.now()}.png`;
+        link.href = generatedImage;
+        link.click();
+    }, [generatedImage]);
+
 
     return (
         <div className="container mx-auto max-w-5xl">
@@ -124,7 +148,7 @@ const ProductPage: React.FC = () => {
                 {/* Right Panel: Results */}
                 <Card>
                     <CardHeader><h2 className="text-lg font-bold">2. Results</h2></CardHeader>
-                    <CardContent>
+                    <CardContent className="flex flex-col items-center">
                         <div className="w-full h-[28rem] bg-muted rounded-lg flex items-center justify-center">
                             {isLoading ? (
                                 <div className="text-center">
@@ -137,6 +161,17 @@ const ProductPage: React.FC = () => {
                                 <p className="text-muted-foreground text-center px-4">Your product photoshoot results will appear here.</p>
                             )}
                         </div>
+                        {generatedImage && !isLoading && (
+                            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 flex flex-col sm:flex-row gap-4 w-full">
+                                <Button onClick={handleSave} className="w-full" size="lg" disabled={isSaved}>
+                                    {isSaved ? <CheckIcon className="w-5 h-5 mr-2" /> : <SaveIcon className="w-5 h-5 mr-2" />}
+                                    {isSaved ? 'Saved' : 'Save Photoshoot'}
+                                </Button>
+                                <Button onClick={handleExport} className="w-full" size="lg" variant="secondary">
+                                    <DownloadIcon className="w-5 h-5 mr-2" /> Export
+                                </Button>
+                            </motion.div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

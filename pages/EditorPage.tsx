@@ -1,10 +1,11 @@
+
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, Reorder } from 'framer-motion';
 import Button from '../components/ui/Button';
 import Card, { CardContent, CardHeader } from '../components/ui/Card';
 import Spinner from '../components/ui/Spinner';
-import { DownloadIcon, ImagePlusIcon, Wand2Icon, LayoutTemplateIcon } from '../components/icons/LucideIcons';
+import { DownloadIcon, ImagePlusIcon, Wand2Icon, LayoutTemplateIcon, SaveIcon, CheckIcon } from '../components/icons/LucideIcons';
 import { Preset, ImagePart } from '../types';
 import { THUMBNAIL_PRESETS } from '../constants';
 import * as geminiService from '../services/geminiService';
@@ -33,6 +34,8 @@ const EditorPage: React.FC = () => {
   const [preset, setPreset] = useState<Preset>(THUMBNAIL_PRESETS[0]); // Default to YouTube
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [generatedThumbnail, setGeneratedThumbnail] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
+  const [generationData, setGenerationData] = useState<{ prompt: string; assets: ImagePart[] } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   // State for AI Scene Generator
@@ -47,6 +50,7 @@ const EditorPage: React.FC = () => {
         setGeneratedThumbnail(item.imageData);
         setAssets([]);
         setPrompt('');
+        setIsSaved(true);
       } else {
         navigate('/editor');
       }
@@ -54,6 +58,7 @@ const EditorPage: React.FC = () => {
       setGeneratedThumbnail(null);
       setAssets([]);
       setPrompt('');
+      setIsSaved(false);
     }
   }, [id, thumbnailHistory, navigate]);
 
@@ -133,6 +138,7 @@ const EditorPage: React.FC = () => {
 
     setIsLoading(true);
     setGeneratedThumbnail(null);
+    setIsSaved(false);
     try {
       const imageParts: ImagePart[] = await Promise.all(assets.map(async asset => {
         const base64Data = await geminiService.fileToBase64(asset.file);
@@ -148,7 +154,7 @@ const EditorPage: React.FC = () => {
         const mimeType = imageParts[0]?.mimeType || 'image/png';
         const dataUrl = `data:${mimeType};base64,${result}`;
         setGeneratedThumbnail(dataUrl);
-        addThumbnail(dataUrl, prompt, imageParts);
+        setGenerationData({ prompt, assets: imageParts });
       }
 
     } catch (error) {
@@ -156,6 +162,13 @@ const EditorPage: React.FC = () => {
       alert((error as Error).message);
     } finally {
       setIsLoading(false);
+    }
+  };
+  
+  const handleSave = () => {
+    if (generatedThumbnail && generationData && !isSaved) {
+      addThumbnail(generatedThumbnail, generationData.prompt, generationData.assets);
+      setIsSaved(true);
     }
   };
 
@@ -305,9 +318,13 @@ const EditorPage: React.FC = () => {
                 )}
               </div>
               {generatedThumbnail && !isLoading && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 w-full max-w-xs">
-                  <Button onClick={handleExport} className="w-full" size="lg">
-                    <DownloadIcon className="w-5 h-5 mr-2" /> Export Image
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 w-full max-w-sm flex flex-col sm:flex-row gap-4">
+                  <Button onClick={handleSave} className="w-full" size="lg" disabled={isSaved}>
+                    {isSaved ? <CheckIcon className="w-5 h-5 mr-2" /> : <SaveIcon className="w-5 h-5 mr-2" />}
+                    {isSaved ? 'Saved' : 'Save Design'}
+                  </Button>
+                  <Button onClick={handleExport} className="w-full" size="lg" variant="secondary">
+                    <DownloadIcon className="w-5 h-5 mr-2" /> Export
                   </Button>
                 </motion.div>
               )}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 // Fix: Import HTMLMotionProps to resolve type conflicts with React's HTML attributes.
 import { motion, HTMLMotionProps } from 'framer-motion';
@@ -18,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   className = '',
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none transition-colors duration-200';
+  const baseStyles = 'inline-flex items-center justify-center rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none transition-colors duration-200 whitespace-nowrap';
 
   const variantStyles = {
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',

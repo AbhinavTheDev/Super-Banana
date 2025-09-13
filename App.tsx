@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion, Transition } from 'framer-motion';
+// Fix: Removed 'Transition' from framer-motion import to avoid a type conflict reported by TypeScript.
+import { AnimatePresence, motion } from 'framer-motion';
 import { ThemeProvider } from './hooks/useTheme';
 import { HistoryProvider } from './hooks/useHistory';
 import { SettingsProvider } from './hooks/useSettings';
@@ -21,7 +21,8 @@ const pageVariants = {
   out: { opacity: 0, y: -20 },
 };
 
-const pageTransition: Transition = {
+// Fix: Removed the explicit 'Transition' type annotation to let TypeScript infer the object's type, bypassing the type conflict.
+const pageTransition = {
   type: 'tween',
   ease: 'anticipate',
   duration: 0.5,

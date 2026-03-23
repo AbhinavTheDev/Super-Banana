@@ -1,13 +1,8 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-
 # 🍌 Super Banana
 
 **An AI-powered Thumbnail & Product Photo Builder**
 
 Create stunning visuals with ease — remove backgrounds, generate AI scenes, and design flexible layouts, all in one place.
-
-[![Demo Video](https://img.youtube.com/vi/C-cVJLL4jNA/maxresdefault.jpg)](https://youtu.be/C-cVJLL4jNA?si=g2lJ6CrfvjfEApZg)
 
 > 🎬 **[Watch the Demo Video](https://youtu.be/C-cVJLL4jNA?si=g2lJ6CrfvjfEApZg)**
 

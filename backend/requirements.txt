@@ -1,0 +1,8 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+sqlmodel==0.0.24
+python-dotenv==1.1.0
+openai==1.78.1
+imagekitio==5.0.0
+httpx==0.28.1
+python-multipart==0.0.20

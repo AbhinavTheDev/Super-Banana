@@ -1,4 +1,4 @@
-# Super Banana
+![super banana](./assets/Super-Banana.png)
 
 ## ⭐ About
 - AI-assisted thumbnail generation using Cloudflare AI models

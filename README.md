@@ -1,32 +1,7 @@
 # Super Banana
 
-<div align="center">
-
-  <img src="https://img.shields.io/badge/Project-Super%20Banana-7c3aed?style=for-the-badge" alt="Super Banana" />
-  <img src="https://img.shields.io/badge/Stack-FastAPI%20%7C%20React%20%7C%20Vite-00C7B7?style=for-the-badge&logo=fastapi" alt="Stack" />
-  <img src="https://img.shields.io/badge/Frontend-TypeScript-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Backend-Python-3776AB?style=for-the-badge&logo=python" alt="Python" />
-  <img src="https://img.shields.io/badge/Status-Active-22c55e?style=for-the-badge" alt="Status" />
-
-</div>
-
-Edit like Magic.
-
-Super Banana is an AI-powered YouTube thumbnail generation app that helps creators generate polished, stylized thumbnails from a prompt and a reference headshot. The project combines a Python FastAPI backend with a modern React + Vite frontend to deliver a streamlined thumbnail generation workflow.
-
-## Why this project?
-
-Creating eye-catching thumbnails is time-consuming and often requires design iterations. Super Banana aims to simplify that process by giving creators:
-
-- A fast image upload flow for reference headshots
-- AI-driven thumbnail generation from prompts and visual styles
-- Multiple generated variations per job
-- Job tracking with streaming status updates
-- A modern frontend experience for quick iteration
-
-## Features
-
-- AI-assisted thumbnail generation using OpenAI and Cloudflare AI models
+## ⭐ About
+- AI-assisted thumbnail generation using Cloudflare AI models
 - Upload and reuse reference headshots
 - Generate multiple thumbnails from a single prompt
 - Track job progress and completion with SSE streaming
@@ -34,26 +9,21 @@ Creating eye-catching thumbnails is time-consuming and often requires design ite
 - React + TypeScript frontend with Vite for a fast developer experience
 - SQLite-backed persistence for job metadata
 
-## Tech stack
+### :hammer_and_wrench: Tech Stack
 
-### Backend
-- FastAPI
-- SQLModel
-- SQLite
-- Python-dotenv
-- OpenAI SDK
-- ImageKit integration
-- Uvicorn
+<p align="center">
+  <img src="https://img.shields.io/badge/React-white?logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Vite-white?logo=vite&logoColor=9135FF" alt="vite" />
+  <img src="https://img.shields.io/badge/Typescript-3178C6?logo=typescript&logoColor=white" alt="typescript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/ShadCN--UI-7F56D9" alt="ShadCN UI" />
+  <img src="https://img.shields.io/badge/python-yellow?logo=python" alt="python" />
+  <img src="https://img.shields.io/badge/FastAPI-blue?logo=fastapi" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/SQLite-003B57?logo=sqlite" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Gunicorn-499848?logo=gunicorn&logoColor=white" alt="gunicorn" />
+</p>
 
-### Frontend
-- React
-- TypeScript
-- Vite
-- Wouter
-- Radix UI / shadcn-inspired component stack
-- Tailwind CSS
-
-## Project structure
+### :evergreen_tree: Project structure Tree
 
 ```text
 Super-Banana/
@@ -78,19 +48,10 @@ Super-Banana/
 │   └── README.md
 ├── README.md
 ├── .gitignore
-└── .env.example (create as needed)
+└── .env.example
 ```
 
-## API overview
-
-The backend exposes a small set of REST endpoints for job creation and monitoring:
-
-- `POST /api/upload-headshot` — upload a reference image and receive an ImageKit URL
-- `POST /api/jobs` — create a thumbnail generation job
-- `GET /api/jobs/{job_id}` — fetch the current job state
-- `GET /api/jobs/{job_id}/stream` — stream live job updates via SSE
-
-## Setup guide
+### :outbox_tray: Set up
 
 ### Prerequisites
 
@@ -100,7 +61,6 @@ Before starting, make sure you have:
 - Node.js 18+
 - npm or bun
 - Access to:
-  - OpenAI API key
   - ImageKit credentials
   - Cloudflare Worker AI token
 
@@ -123,7 +83,6 @@ pip install -r requirements.txt
 Create a `.env` file in the `backend/` directory with the variables required by `config.py`:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key
 IMAGEKIT_PRIVATE_KEY=your_imagekit_private_key
 IMAGEKIT_PUBLIC_KEY=your_imagekit_public_key
 IMAGEKIT_URL_ENDPOINT=https://ik.imagekit.io/your_instance
@@ -161,26 +120,18 @@ Then open:
 
 - Backend startup initializes the SQLite database automatically through the app lifespan hook.
 - The frontend is configured for local Vite development and talks to the backend API for generation jobs.
-- Some features are still under active iteration; this project is best viewed as a working prototype with room for UX and workflow improvements.
 
-## Roadmap
+### :construction: API overview
 
-- [x] Backend route scaffolding
-- [x] Core API for upload and job creation
-- [x] Job streaming and status updates
-- [x] Frontend skeleton and UI scaffolding
-- [ ] End-to-end backend integration
-- [ ] UI refinements and polish
-- [ ] Testing and generation evaluation
+The backend exposes a small set of REST endpoints for job creation and monitoring:
 
-## Contact
+| Methods | Endpoints | Description |
+|---------|-----------|-------------|
+| POST | `/api/upload-headshot` | upload a reference image and receive an ImageKit URL |
+| POST | `/api/jobs` | create a thumbnail generation job |
+| GET | `/api/jobs/{job_id}` | fetch the current job state |
+| GET | `/api/jobs/{job_id}/stream` | stream live job updates via SSE |
 
-- GitHub: https://github.com/AbhinavTheDev
-- Repository: https://github.com/AbhinavTheDev/Super-Banana
-- Issues: https://github.com/AbhinavTheDev/Super-Banana/issues
-
-If you want to contribute or ask a question, feel free to open an issue in the repository.
-
-## License
-
-This project does not currently declare a license in the repository. If you plan to reuse or distribute it, confirm the licensing terms before publishing or sharing externally.
+### :mailbox: Contact
+Hi, I'm Abhinav! 👋  
+Connect with me on [LinkedIn](https://www.linkedin.com/in/say-hi-to-abhinav/), [X](https://x.com/Abhinav_twts) and check out my other projects on [GitHub](https://github.com/AbhinavTheDev).

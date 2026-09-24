@@ -23,34 +23,6 @@
   <img src="https://img.shields.io/badge/Gunicorn-499848?logo=gunicorn&logoColor=white" alt="gunicorn" />
 </p>
 
-### :evergreen_tree: Project structure Tree
-
-```text
-Super-Banana/
-├── backend/
-│   ├── services/
-│   ├── config.py
-│   ├── database.py
-│   ├── main.py
-│   ├── models.py
-│   ├── requirements.txt
-│   ├── routes.py
-│   └── super-banana.db
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   ├── components.json
-│   ├── eslint.config.js
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   └── README.md
-├── README.md
-├── .gitignore
-└── .env.example
-```
-
 ### :outbox_tray: Set up
 
 ### Prerequisites

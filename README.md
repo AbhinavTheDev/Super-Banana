@@ -23,6 +23,16 @@
   <img src="https://img.shields.io/badge/Gunicorn-499848?logo=gunicorn&logoColor=white" alt="gunicorn" />
 </p>
 
+## Star History
+
+<a href="https://www.star-history.com/?repos=abhinavthedev%2Fsuper-banana&type=timeline&legend=bottom-right">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=abhinavthedev/super-banana&type=timeline&theme=dark&legend=bottom-right" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=abhinavthedev/super-banana&type=timeline&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=abhinavthedev/super-banana&type=timeline&legend=bottom-right" />
+ </picture>
+</a>
+
 ### :outbox_tray: Set up
 
 ### Prerequisites
